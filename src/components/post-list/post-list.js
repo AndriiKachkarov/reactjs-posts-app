@@ -1,6 +1,7 @@
 import React from 'react';
 import PostListItem from "../post-list-item/post-list-item";
 import './post-list.css';
+import {ListGroup} from "reactstrap/es";
 
 const PostList = ({posts}) => {
 
@@ -15,9 +16,9 @@ const PostList = ({posts}) => {
     });
 
     return (
-        <ul className="app-list list-group">
+        <ListGroup className="app-list">
             {elements}
-        </ul>
+        </ListGroup>
     )
 };
 
