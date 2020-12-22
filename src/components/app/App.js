@@ -19,7 +19,8 @@ export default class App extends Component {
             {label: 'Going to learn ReactJS', important: true, like: false, id: 1},
             {label: 'That is so good', important: false, like: false, id: 2},
             {label: 'I need a break', important: false, like: false, id: 3},
-        ]
+        ],
+        term: ''
     };
     maxId = 4;
 
@@ -65,10 +66,23 @@ export default class App extends Component {
         })
     };
 
+    searchPosts(items, term) {
+        if (!term.length) {
+            return items;
+        }
+        return items.filter(item => item.label.indexOf(term) > -1);
+    }
+
+    onUpdateSearch = (term) => {
+        this.setState({term});
+    };
+
     render() {
-        const {data} = this.state;
+        const {data, term} = this.state;
         const liked = data.filter(item => item.like).length;
         const allPosts = data.length;
+
+        const visiblePosts = this.searchPosts(data, term);
 
         return (
             <AppBlock>
@@ -77,11 +91,13 @@ export default class App extends Component {
                     allPosts={allPosts}
                 />
                 <div className="search-panel d-flex">
-                    <SearchPanel/>
+                    <SearchPanel
+                        onUpdateSearch={this.onUpdateSearch}
+                    />
                     <PostStatusFilter/>
                 </div>
                 <PostList
-                    posts={this.state.data}
+                    posts={visiblePosts}
                     onDelete={id => this.deleteItem(id)}
                     onToggleImportant={this.onToggleImportant}
                     onToggleLiked={this.onToggleLiked}
