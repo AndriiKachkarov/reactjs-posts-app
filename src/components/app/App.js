@@ -20,7 +20,8 @@ export default class App extends Component {
             {label: 'That is so good', important: false, like: false, id: 2},
             {label: 'I need a break', important: false, like: false, id: 3},
         ],
-        term: ''
+        term: '',
+        filter: 'all'
     };
     maxId = 4;
 
@@ -73,16 +74,28 @@ export default class App extends Component {
         return items.filter(item => item.label.indexOf(term) > -1);
     }
 
+    filterPosts(items, filter) {
+        if (filter === 'like') {
+            return items.filter(item => item.like);
+        } else {
+            return items;
+        }
+    }
+
     onUpdateSearch = (term) => {
         this.setState({term});
     };
 
+    onFilterSelect = (filter) => {
+        this.setState({filter});
+    };
+
     render() {
-        const {data, term} = this.state;
+        const {data, term, filter} = this.state;
         const liked = data.filter(item => item.like).length;
         const allPosts = data.length;
 
-        const visiblePosts = this.searchPosts(data, term);
+        const visiblePosts = this.filterPosts(this.searchPosts(data, term), filter);
 
         return (
             <AppBlock>
@@ -94,7 +107,10 @@ export default class App extends Component {
                     <SearchPanel
                         onUpdateSearch={this.onUpdateSearch}
                     />
-                    <PostStatusFilter/>
+                    <PostStatusFilter
+                        filter={filter}
+                        onFilterSelect={this.onFilterSelect}
+                    />
                 </div>
                 <PostList
                     posts={visiblePosts}
